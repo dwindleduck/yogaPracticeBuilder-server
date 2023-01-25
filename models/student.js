@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const Practice = require("./practice")
+const Posture = require("./posture")
 
 const studentSchema = new mongoose.Schema(
 	{
@@ -18,12 +20,16 @@ const studentSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-        knownPostures: {
-			type: Array,
-		},
-        favoritedPractices: {
-			type: Array,
-		},
+        knownPostures: [{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Posture",
+				required: true
+		}],
+        favoritedPractices: [{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Practice",
+			required: true
+		}],
     
 	},
 	{
@@ -37,4 +43,6 @@ const studentSchema = new mongoose.Schema(
 	}
 )
 
-module.exports = mongoose.model('Student', studentSchema)
+const Student = mongoose.model('Student', studentSchema)
+
+module.exports = Student

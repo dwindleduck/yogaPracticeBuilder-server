@@ -2,6 +2,7 @@ const express = require("express")
 const { handle404 } = require("../lib/custom-errors")
 const { requireToken } = require('../config/auth')
 const Posture = require("../models/posture")
+const Student = require("../models/student")
 const router = express.Router()
 
 
@@ -53,13 +54,6 @@ router.get("/postures/portion/:portionOfPractice", requireToken, (req, res, next
         .catch(next)
 })
 
-
-
-
-
-
-
-
 //Posture by Id
 //Get /postures/:id
 router.get("/postures/:id", requireToken, (req, res, next) => {
@@ -71,7 +65,24 @@ router.get("/postures/:id", requireToken, (req, res, next) => {
     .catch(next)
 })
 
-
+//Index by student's known postures
+//GET /postures/known:userId
+router.get("/postures/known/:userId", requireToken, (req, res, next) => {
+    Student.findById(req.params.userId)
+        .populate("knownPostures")
+        .then(handle404)
+        .then(student => {
+            return student.knownPostures
+        })
+        .then(postures => {
+            return postures.map(posture => posture)
+        })
+        .then(postures => {
+            const responsePostures = scrubPostureForUser(postures)
+            res.status(200).json({ postures: responsePostures })
+        })
+        .catch(next)
+})
 
 
 

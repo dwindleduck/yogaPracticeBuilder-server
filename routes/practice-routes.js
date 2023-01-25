@@ -2,6 +2,7 @@ const express = require("express")
 const { handle404 } = require("../lib/custom-errors")
 const { requireToken } = require('../config/auth')
 const Practice = require("../models/practice")
+const Student = require("../models/student")
 const router = express.Router()
 
 
@@ -54,7 +55,7 @@ router.get("/practices/style/:style", (req, res, next) => {
 
 //Index Practices by author
 //GET /practices/author/:author
-router.get("/practices/author/:author", (req, res, next) => {
+router.get("/practices/author/:author", requireToken, (req, res, next) => {
     Practice.find({ author: {$eq: req.params.author} })
         .then(practices => {
             return practices.map(practice => practice)
@@ -68,6 +69,33 @@ router.get("/practices/author/:author", (req, res, next) => {
 
 
 
+//Index by favoritedPractices
+//Get /practices/favorited/:userId
+router.get("/practices/favorited/:userId", requireToken, (req, res, next) => {
+    Student.findById(req.params.userId)
+        .populate("favoritedPractices")
+        .then(handle404)
+        .then(student => {
+            return student.favoritedPractices
+        })
+        .then(practices => {
+            return practices.map(practice => practice)
+        })
+        .then(practices => {
+            const responsePractices = scrubPracticeForUser(practices)
+            res.status(200).json({ practices: responsePractices })
+        })
+        .catch(next)
+
+
+})
+
+
+
+
+
+
+
 
 
 
@@ -77,8 +105,7 @@ router.get("/practices/author/:author", (req, res, next) => {
 //GET /practices/:id
 router.get("/practices/:id", requireToken, (req, res, next) => {
     Practice.findById(req.params.id)
-    .populate("author")
-    .populate("sequence") 
+    .populate(["author", "sequence"])
     .then(handle404)   
     .then(practice => {
             res.status(200).json({ practice: practice})
