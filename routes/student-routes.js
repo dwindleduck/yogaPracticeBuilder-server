@@ -36,7 +36,9 @@ router.post("/sign-up", (req, res, next) => {
 router.post("/sign-in", (req, res, next) => {
     Student.findOne({ email: req.body.credentials.email})
         .then(student => createStudentToken(req, student))
-        .then(token => res.json({ token: token }))
+        .then(token => {
+            res.json({ token: token })
+        })
         .catch(next)
 })
 

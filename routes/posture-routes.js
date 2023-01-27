@@ -56,6 +56,7 @@ router.get("/postures/portion/:portionOfPractice", requireToken, (req, res, next
 
 //Posture by Id
 //Get /postures/:id
+//
 router.get("/postures/:id", requireToken, (req, res, next) => {
     Posture.findById(req.params.id)
     .then(handle404)    
