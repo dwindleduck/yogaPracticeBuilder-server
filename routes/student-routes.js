@@ -55,15 +55,30 @@ router.get("/student", requireToken, (req, res, next) => {
 })
 
 
-
 //UPDATE
 //PATCH /students/:id
 router.patch("/students/:id", requireToken, (req, res, next) => {
     Student.findById(req.params.id)
         .then(handle404)
         .then(student => {
-            
             return student.updateOne(req.body.student)
+        })
+        .then(() => res.sendStatus(204)) //success, no content returned
+        .catch(next)
+})
+
+
+//UPDATE
+// Patch /student/updateKnown
+router.patch("/student/updateKnown", requireToken, (req, res, next) => {
+    Student.findById(req.user._id)
+        .then(handle404)
+        .then(student => {
+            console.log(req.body)
+            console.log(student.knownPostures)
+            student.knownPostures = req.body
+            console.log(student.knownPostures)
+            return student.save()
         })
         .then(() => res.sendStatus(204)) //success, no content returned
         .catch(next)
