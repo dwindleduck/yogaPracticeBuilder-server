@@ -86,10 +86,22 @@ router.get("/practices/favorited/:userId", requireToken, (req, res, next) => {
             res.status(200).json({ practices: responsePractices })
         })
         .catch(next)
-
-
 })
 
+
+//Index by student's built
+//GET /known
+router.get("/built", requireToken, (req, res, next) => {
+    Practice.find({ author: {$eq: req.user._id} })
+    .then(practices => {
+        return practices.map(practice => practice)
+    })
+    .then(practices => {
+        const responsePractices = scrubPracticeForUser(practices)
+        res.status(200).json({ practices: responsePractices })
+    })
+    .catch(next)
+})
 
 
 
