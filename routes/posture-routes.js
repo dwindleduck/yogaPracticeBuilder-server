@@ -56,7 +56,6 @@ router.get("/postures/portion/:portionOfPractice", requireToken, (req, res, next
 
 //Posture by Id
 //Get /postures/:id
-//
 router.get("/postures/:id", requireToken, (req, res, next) => {
     Posture.findById(req.params.id)
     .then(handle404)    
@@ -67,9 +66,10 @@ router.get("/postures/:id", requireToken, (req, res, next) => {
 })
 
 //Index by student's known postures
-//GET /postures/known:userId
-router.get("/postures/known/:userId", requireToken, (req, res, next) => {
-    Student.findById(req.params.userId)
+//GET /known
+router.get("/known", requireToken, (req, res, next) => {
+    console.log(req.user._id)
+    Student.findById(req.user._id)
         .populate("knownPostures")
         .then(handle404)
         .then(student => {

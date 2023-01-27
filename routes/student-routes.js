@@ -43,6 +43,19 @@ router.post("/sign-in", (req, res, next) => {
 })
 
 
+//SHOW
+//Get /student
+router.get("/student", requireToken, (req, res, next) => {
+    Student.findById(req.user._id)
+        .then(handle404) 
+        .then(student => {
+            res.status(200).json({ student: student})
+        })
+        .catch(next)
+})
+
+
+
 //UPDATE
 //PATCH /students/:id
 router.patch("/students/:id", requireToken, (req, res, next) => {
