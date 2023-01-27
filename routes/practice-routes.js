@@ -134,8 +134,11 @@ router.get("/practices/:id", requireToken, (req, res, next) => {
 //Create
 //POST /practices
 router.post("/practices", requireToken, (req, res, next) => {
-    //req.body will have person with something in it
-    Practice.create(req.body.practice)
+
+    const practiceHolder = req.body.practice
+    practiceHolder.author = req.user._id
+    
+    Practice.create(practiceHolder)
         .then(practice => {
             res.status(201).json({ practice: practice }) //201: something was created on the server successfully
         })
