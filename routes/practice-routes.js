@@ -13,6 +13,7 @@ const scrubPracticeForUser = (practices) => {
             name: practice.name,
             style: practice.style,
             description: practice.description,
+            sequence: practice.sequence,
             _id: practice._id
             }
         responsePractices.push(updatedPractice)
@@ -26,6 +27,7 @@ const scrubPracticeForUser = (practices) => {
 //GET /practices
 router.get("/practices", (req, res, next) => {
     Practice.find()
+        .populate("sequence")
         .then(practices => {
             return practices.map(practice => practice)
         })
