@@ -77,8 +77,8 @@ router.get("/practices/author/:author", requireToken, (req, res, next) => {
 //Get /practices/favorited/:userId
 router.get("/practices/favorited/:userId", requireToken, (req, res, next) => {
     Student.findById(req.params.userId)
-        .then(handle404)
         .populate("favoritedPractices")
+        .then(handle404)
         .then(student => {
             return student.favoritedPractices
         })
@@ -122,8 +122,8 @@ router.get("/built", requireToken, (req, res, next) => {
 //GET /practices/:id
 router.get("/practices/:id", requireToken, (req, res, next) => {
     Practice.findById(req.params.id)
-    .then(handle404)
     .populate(["author", "sequence"])
+    .then(handle404)
     .then(practice => {
             res.status(200).json({ practice: practice})
         })

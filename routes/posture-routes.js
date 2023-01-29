@@ -71,8 +71,8 @@ router.get("/postures/:id", requireToken, (req, res, next) => {
 router.get("/known", requireToken, (req, res, next) => {
     console.log(req.user._id)
     Student.findById(req.user._id)
-        .then(handle404)
         .populate("knownPostures")
+        .then(handle404)
         .then(student => {
             return student.knownPostures
         })
