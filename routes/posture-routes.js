@@ -44,7 +44,8 @@ router.get("/postures", (req, res, next) => {
 //GET /postures/portion/:portionOfPractice
 router.get("/postures/portion/:portionOfPractice", requireToken, (req, res, next) => {
     Posture.find({ portionOfPractice: {$eq: req.params.portionOfPractice} })
-        .then(postures => {
+    .then(handle404)    
+    .then(postures => {
             return postures.map(posture => posture)
         })
         .then(postures => {
@@ -70,8 +71,8 @@ router.get("/postures/:id", requireToken, (req, res, next) => {
 router.get("/known", requireToken, (req, res, next) => {
     console.log(req.user._id)
     Student.findById(req.user._id)
-        .populate("knownPostures")
         .then(handle404)
+        .populate("knownPostures")
         .then(student => {
             return student.knownPostures
         })

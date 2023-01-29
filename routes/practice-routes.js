@@ -44,6 +44,7 @@ router.get("/practices", (req, res, next) => {
 //GET /practices/style/:style
 router.get("/practices/style/:style", (req, res, next) => {
     Practice.find({ style: {$eq: req.params.style} })
+        .then(handle404) 
         .then(practices => {
             return practices.map(practice => practice)
         })
@@ -59,6 +60,7 @@ router.get("/practices/style/:style", (req, res, next) => {
 //GET /practices/author/:author
 router.get("/practices/author/:author", requireToken, (req, res, next) => {
     Practice.find({ author: {$eq: req.params.author} })
+        .then(handle404) 
         .then(practices => {
             return practices.map(practice => practice)
         })
@@ -75,8 +77,8 @@ router.get("/practices/author/:author", requireToken, (req, res, next) => {
 //Get /practices/favorited/:userId
 router.get("/practices/favorited/:userId", requireToken, (req, res, next) => {
     Student.findById(req.params.userId)
-        .populate("favoritedPractices")
         .then(handle404)
+        .populate("favoritedPractices")
         .then(student => {
             return student.favoritedPractices
         })
@@ -95,6 +97,7 @@ router.get("/practices/favorited/:userId", requireToken, (req, res, next) => {
 //GET /known
 router.get("/built", requireToken, (req, res, next) => {
     Practice.find({ author: {$eq: req.user._id} })
+    .then(handle404)
     .then(practices => {
         return practices.map(practice => practice)
     })
@@ -119,8 +122,8 @@ router.get("/built", requireToken, (req, res, next) => {
 //GET /practices/:id
 router.get("/practices/:id", requireToken, (req, res, next) => {
     Practice.findById(req.params.id)
+    .then(handle404)
     .populate(["author", "sequence"])
-    .then(handle404)   
     .then(practice => {
             res.status(200).json({ practice: practice})
         })
