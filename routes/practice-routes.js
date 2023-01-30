@@ -157,7 +157,7 @@ router.patch("/practices/:id", requireToken, (req, res, next) => {
    Practice.findById(req.params.id)
         .then(handle404) 
         .then(practice => {
-            if(JSON.stringify(practice.author) === JSON.stringify(req.user._id)) {
+            if(practice.author.equals(req.user._id)) {
                 console.log("Updated!")
                 return practice.updateOne(req.body.practice)
             }
@@ -176,7 +176,7 @@ router.delete('/practices/:id', requireToken, (req, res, next) => {
 	Practice.findById(req.params.id)
         .then(handle404) 
         .then((practice) => {
-            if(JSON.stringify(practice.author) === JSON.stringify(req.user._id)) {
+            if(practice.author.equals(req.user._id)) {
                 console.log("Deleted!")
                 practice.deleteOne()
             }
