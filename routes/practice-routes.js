@@ -141,6 +141,7 @@ router.get("/practices/:id", requireToken, (req, res, next) => {
 router.post("/practices", requireToken, (req, res, next) => {
 
     const practiceHolder = req.body.practice
+    //give theh practice an author and assign it the user id
     practiceHolder.author = req.user._id
     
     Practice.create(practiceHolder)
