@@ -153,22 +153,9 @@ router.post("/practices", requireToken, (req, res, next) => {
 //UPDATE
 //PATCH /practices/:id
 router.patch("/practices/:id", requireToken, (req, res, next) => {
-    
-
-
-    //const practiceId = req.params.id
-//author: {$eq: req.user._id}
-
-
-    //Practice.find({_id:{$eq: req.params.id }})
    Practice.findById(req.params.id)
         .then(handle404) 
         .then(practice => {
-            // console.log(`Update Practice: ${JSON.stringify(practice.author)}`)
-            // console.log(`User ID: ${JSON.stringify(req.user._id)}`)
-
-            // console.log(JSON.stringify(practice.author) === JSON.stringify(req.user._id))
-            
             if(JSON.stringify(practice.author) === JSON.stringify(req.user._id)) {
                 console.log("Updated!")
                 return practice.updateOne(req.body.practice)
@@ -188,7 +175,14 @@ router.delete('/practices/:id', requireToken, (req, res, next) => {
 	Practice.findById(req.params.id)
         .then(handle404) 
         .then((practice) => {
-			practice.deleteOne()
+            if(JSON.stringify(practice.author) === JSON.stringify(req.user._id)) {
+                console.log("Deleted!")
+                practice.deleteOne()
+            }
+            else {
+                console.log("That's not your practice to delete!")
+            }
+
 		})
 		.then(() => res.sendStatus(204))
 		.catch(next)
