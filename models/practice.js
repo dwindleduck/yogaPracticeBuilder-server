@@ -19,15 +19,15 @@ const practiceSchema = new Schema({
     },
     description: {
         type: String,
-        required: true
+        required: true,
     },
     style: {
         type: String,
-        enum: [
-            "vinyasa",
-            "restorative",
-            "astanga",
-        ]
+        // enum: [
+        //     "vinyasa",
+        //     "restorative",
+        //     "astanga",
+        // ]
     },
     sequence: [{
         type: mongoose.Schema.Types.ObjectId,
