@@ -1,32 +1,32 @@
 # Yoga Practice Builder
 
-Collect postures that you know and use them to build a yoga sequence
+Collect postures that you know and use them to build a yoga sequence.
+This app is meant to help students build a home practice and to be used by teachers to construct sequences for class.
 
-## ERD & Wireframes
-![ERD & Wireframes](./assets/YPB_ERD_Wireframes.png)
+## Technologies Used
+- JavaScript
+- Node.js
+- Express
+- Mongoose, MongoDb
+- Heroku, MongoDb Atlas
 
-## User Stories
-### MVP/Version 1
-- As a user I want to be able to sign in
-- As a user I want to be able to see a landing page with navigation buttons
-- As a user I want to be able to see a list of all postures in the library
-- As a user I want to be able to see a list of my known postures
-- As a user I want to be able to select postures from the library to add to my list of known postures
-- As a user I want to be able to see posture details
-- As a user I want to be able to see a list of the practices I have built
-- As a user I want to be able to see a list of all practices posted by all users
-- As a user I want to be able to see the details of a practice
-- As a user I want to be able to favorite a practice to try later
-- As a user I want to be able to build a new practice
-- As a user I want to be able to add postures to a sequence
-- As a user I want to be able to update a practice I created
-- As a user I want to be able to delete a practice I created
+## ERD 
+![ERD](link to ERD image)
 
-### Version 2
-- As a user I want to be able to build a new practice from a list of templates
-- As a user I want to be able to add new (unique) postures to the library
-- As a user I want to be able to filter lists of practices by tags (find a practice to try)
+## Routes Table
 
-### Version 3
-- As a user I want a timed autoplay step through of the sequence
-- As a user I want audio instuctions during playback
+| NAME    |         PATH         | HTTP VERB |        PURPOSE              |
+| :---    |    :----             |   :---:   |        :----                |
+| Sign Up | /sign-up             | POST      | Register new account        |
+| Sign In | /sign-in             | POST      | Sign in user                |
+| Show    | /student             | GET       | Show user info              |
+| Index   | /postures            | GET       | List all postures           |
+| Show    | /postures/:id        | GET       | Show posture by ID          |
+| Show    | /known               | GET       | Show user's known postures  |
+| Update  | /student/updateKnown | PATCH     | Update known postures       |
+| Index   | /practices           | GET       | List all practices          |
+| Show    | /practices/:id       | GET       | Show practice by ID         |
+| Index   | /built               | GET       | Show user's built practices |
+| Create  | /practices           | POST      | Create new practice         |
+| Update  | /practices/:id       | PATCH     | Update practice by ID       |
+| Delete  | /practices/:id       | DELETE    | Delete practice by ID       |

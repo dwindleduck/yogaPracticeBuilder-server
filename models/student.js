@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 const Practice = require("./practice")
 const Posture = require("./posture")
 
@@ -24,13 +24,7 @@ const studentSchema = new mongoose.Schema(
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "Posture",
 				required: true
-		}],
-        favoritedPractices: [{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Practice",
-			required: true
-		}],
-    
+		}],    
 	},
 	{
 		timestamps: true,
@@ -43,6 +37,6 @@ const studentSchema = new mongoose.Schema(
 	}
 )
 
-const Student = mongoose.model('Student', studentSchema)
+const Student = mongoose.model("Student", studentSchema)
 
 module.exports = Student

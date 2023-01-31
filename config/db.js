@@ -1,5 +1,5 @@
 
-const mongooseBaseName = 'yoga-practice-builder'
+const mongooseBaseName = "yoga-practice-builder"
 
 const database = {
 	development: `mongodb://localhost/${mongooseBaseName}-development`,

@@ -1,12 +1,9 @@
 const express = require("express")
 const { handle404 } = require("../lib/custom-errors")
-const { requireToken } = require('../config/auth')
+const { requireToken } = require("../config/auth")
 const Posture = require("../models/posture")
 const Student = require("../models/student")
 const router = express.Router()
-
-
-
 
 const scrubPostureForUser = (postures) => {
     const responsePostures = []
@@ -23,9 +20,6 @@ const scrubPostureForUser = (postures) => {
     return responsePostures
 }
 
-
-
-
 //Index
 //GET /postures
 router.get("/postures", (req, res, next) => {
@@ -40,22 +34,7 @@ router.get("/postures", (req, res, next) => {
         .catch(next)
 })
 
-//Index by portionOfPractice
-//GET /postures/portion/:portionOfPractice
-router.get("/postures/portion/:portionOfPractice", requireToken, (req, res, next) => {
-    Posture.find({ portionOfPractice: {$eq: req.params.portionOfPractice} })
-    .then(handle404)    
-    .then(postures => {
-            return postures.map(posture => posture)
-        })
-        .then(postures => {
-            const responsePostures = scrubPostureForUser(postures)
-            res.status(200).json({ postures: responsePostures })
-        })
-        .catch(next)
-})
-
-//Posture by Id
+//Show Posture by Id
 //Get /postures/:id
 router.get("/postures/:id", requireToken, (req, res, next) => {
     Posture.findById(req.params.id)
@@ -66,7 +45,7 @@ router.get("/postures/:id", requireToken, (req, res, next) => {
     .catch(next)
 })
 
-//Index by student's known postures
+//Get student's known postures
 //GET /known
 router.get("/known", requireToken, (req, res, next) => {
     console.log(req.user._id)
@@ -85,7 +64,5 @@ router.get("/known", requireToken, (req, res, next) => {
         })
         .catch(next)
 })
-
-
 
 module.exports = router

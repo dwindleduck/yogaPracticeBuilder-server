@@ -1,5 +1,5 @@
 // requiring the connected mongoose
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 // getting the Schema
 const Schema = mongoose.Schema
@@ -23,30 +23,16 @@ const practiceSchema = new Schema({
     },
     style: {
         type: String,
-        // enum: [
-        //     "vinyasa",
-        //     "restorative",
-        //     "astanga",
-        // ]
     },
     sequence: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Posture",
         required: true
     }],
-    // template: {
-    //     lengthOfPractice: {
-    //         type: String
-    //     },
-    //     style: {
-    //         type: String
-    //     },
-    // }
 }, {
     timestamps: true 
 })
 
-
-const Practice = mongoose.model('Practice', practiceSchema)
+const Practice = mongoose.model("Practice", practiceSchema)
 
 module.exports = Practice

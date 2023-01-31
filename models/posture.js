@@ -1,9 +1,8 @@
 // requiring the connected mongoose
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 // getting the Schema
 const Schema = mongoose.Schema
-
 
 const postureSchema = new Schema({
     name: {
@@ -60,7 +59,6 @@ const postureSchema = new Schema({
     timestamps: true 
 })
 
-
-const Posture = mongoose.model('Posture', postureSchema)
+const Posture = mongoose.model("Posture", postureSchema)
 
 module.exports = Posture

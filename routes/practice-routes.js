@@ -1,10 +1,9 @@
 const express = require("express")
 const { handle404 } = require("../lib/custom-errors")
-const { requireToken } = require('../config/auth')
+const { requireToken } = require("../config/auth")
 const Practice = require("../models/practice")
 const Student = require("../models/student")
 const router = express.Router()
-
 
 const scrubPracticeForUser = (practices) => {
     const responsePractices = []
@@ -21,8 +20,6 @@ const scrubPracticeForUser = (practices) => {
     return responsePractices
 }
 
-
-
 //Index
 //GET /practices
 router.get("/practices", (req, res, next) => {
@@ -38,62 +35,19 @@ router.get("/practices", (req, res, next) => {
         .catch(next)
 })
 
-
-
-//Index Practices by style
-//GET /practices/style/:style
-router.get("/practices/style/:style", (req, res, next) => {
-    Practice.find({ style: {$eq: req.params.style} })
-        .then(handle404) 
-        .then(practices => {
-            return practices.map(practice => practice)
+//Practice by Id
+//GET /practices/:id
+router.get("/practices/:id", requireToken, (req, res, next) => {
+    Practice.findById(req.params.id)
+    .populate(["author", "sequence"])
+    .then(handle404)
+    .then(practice => {
+            res.status(200).json({ practice: practice})
         })
-        .then(practices => {
-            const responsePractices = scrubPracticeForUser(practices)
-            res.status(200).json({ practices: responsePractices })
-        })
-        .catch(next)
+    .catch(next)
 })
 
-
-//Index Practices by author
-//GET /practices/author/:author
-router.get("/practices/author/:author", requireToken, (req, res, next) => {
-    Practice.find({ author: {$eq: req.params.author} })
-        .then(handle404) 
-        .then(practices => {
-            return practices.map(practice => practice)
-        })
-        .then(practices => {
-            const responsePractices = scrubPracticeForUser(practices)
-            res.status(200).json({ practices: responsePractices })
-        })
-        .catch(next)
-})
-
-
-
-//Index by favoritedPractices
-//Get /practices/favorited/:userId
-router.get("/practices/favorited/:userId", requireToken, (req, res, next) => {
-    Student.findById(req.params.userId)
-        .populate("favoritedPractices")
-        .then(handle404)
-        .then(student => {
-            return student.favoritedPractices
-        })
-        .then(practices => {
-            return practices.map(practice => practice)
-        })
-        .then(practices => {
-            const responsePractices = scrubPracticeForUser(practices)
-            res.status(200).json({ practices: responsePractices })
-        })
-        .catch(next)
-})
-
-
-//Index by student's built
+//Index student's built practices
 //GET /known
 router.get("/built", requireToken, (req, res, next) => {
     Practice.find({ author: {$eq: req.user._id} })
@@ -107,34 +61,6 @@ router.get("/built", requireToken, (req, res, next) => {
     })
     .catch(next)
 })
-
-
-
-
-
-
-
-
-
-
-
-//Practice by Id
-//GET /practices/:id
-router.get("/practices/:id", requireToken, (req, res, next) => {
-    Practice.findById(req.params.id)
-    .populate(["author", "sequence"])
-    .then(handle404)
-    .then(practice => {
-            res.status(200).json({ practice: practice})
-        })
-    .catch(next)
-})
-
-
-
-
-
-
 
 //Create
 //POST /practices
@@ -169,10 +95,9 @@ router.patch("/practices/:id", requireToken, (req, res, next) => {
         .catch(next)
 })
 
-
 //DELETE
 //DELETE /practices/:id
-router.delete('/practices/:id', requireToken, (req, res, next) => {
+router.delete("/practices/:id", requireToken, (req, res, next) => {
 	Practice.findById(req.params.id)
         .then(handle404) 
         .then((practice) => {
@@ -188,8 +113,5 @@ router.delete('/practices/:id', requireToken, (req, res, next) => {
 		.then(() => res.sendStatus(204))
 		.catch(next)
 })
-
-
-
 
 module.exports = router
