@@ -5,7 +5,7 @@ const cors = require("cors")
 const requestLogger = require('./lib/request-logger')
 
 const db = require('./config/db')
-const PORT = 8000
+const PORT = process.env.PORT || 8000
 
 const seed = require("./lib/seed")
 const studentRoutes = require("./routes/student-routes")
@@ -23,7 +23,7 @@ mongoose.connect(db, {
 
 const app = express()
 
-app.use(cors({ origin: "http://127.0.0.1:5500" }))
+app.use(cors({ origin: process.env.CLIENT_ORIGIN || "http://127.0.0.1:5500" }))
 app.use(express.json())
 app.use(requestLogger)
 
