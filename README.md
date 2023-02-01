@@ -10,8 +10,8 @@ This app is meant to help students build a home practice and to be used by teach
 - Mongoose, MongoDb
 - Heroku, MongoDb Atlas
 
-## ERD 
-![ERD](link to ERD image)
+## Entity Relationship Diagram 
+![ERD](/assets/ERD.png)
 
 ## Routes Table
 
