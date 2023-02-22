@@ -3,7 +3,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 const cors = require("cors")
 const requestLogger = require("./lib/request-logger")
-
+require("dotenv").config()
 const db = require("./config/db")
 const PORT = process.env.PORT || 8000
 
@@ -19,6 +19,12 @@ mongoose.connect(db, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
+
+const connectedDb = mongoose.connection
+
+connectedDb.on('connected', function () {
+    console.log(`Connected to ${connectedDb.name} at ${connectedDb.host}:${connectedDb.port}`);
+  });
 
 const app = express()
 
