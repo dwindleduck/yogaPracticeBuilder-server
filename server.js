@@ -30,7 +30,7 @@ const app = express()
 
 // app.use(cors({ origin: process.env.CLIENT_ORIGIN || "http://127.0.0.1:5500" }))
 app.use(express.json())
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || `http://127.0.0.1:5500` }))
+app.use(cors({ origin: process.env.CLIENT_ORIGIN || `https://dwindleduck.github.io/yogaPracticeBuilder-client/` }))
 app.use(requestLogger)
 
 app.use("/seed", seed)
