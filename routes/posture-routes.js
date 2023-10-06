@@ -65,4 +65,22 @@ router.get("/known", requireToken, (req, res, next) => {
         .catch(next)
 })
 
+
+//For sorting postures
+//Index by portionOfPractice
+//GET /postures/portion/:portionOfPractice
+// router.get("/postures/portion/:portionOfPractice", requireToken, (req, res, next) => {
+//     Posture.find({ portionOfPractice: {$eq: req.params.portionOfPractice} })
+//     .then(handle404)    
+//     .then(postures => {
+//             return postures.map(posture => posture)
+//         })
+//         .then(postures => {
+//             const responsePostures = scrubPostureForUser(postures)
+//             res.status(200).json({ postures: responsePostures })
+//         })
+//         .catch(next)
+// })
+
+
 module.exports = router

@@ -48,7 +48,7 @@ router.get("/practices/:id", requireToken, (req, res, next) => {
 })
 
 //Index student's built practices
-//GET /known
+//GET /built
 router.get("/built", requireToken, (req, res, next) => {
     Practice.find({ author: {$eq: req.user._id} })
     .then(handle404)
@@ -113,5 +113,72 @@ router.delete("/practices/:id", requireToken, (req, res, next) => {
 		.then(() => res.sendStatus(204))
 		.catch(next)
 })
+
+
+
+//For finding a practice to try
+//Index Practices by style
+//GET /practices/style/:style
+// router.get("/practices/style/:style", (req, res, next) => {
+//     Practice.find({ style: {$eq: req.params.style} })
+//         .then(handle404) 
+//         .then(practices => {
+//             return practices.map(practice => practice)
+//         })
+//         .then(practices => {
+//             const responsePractices = scrubPracticeForUser(practices)
+//             res.status(200).json({ practices: responsePractices })
+//         })
+//         .catch(next)
+// })
+//For finding practices by author
+//Index Practices by author
+//GET /practices/author/:author
+// router.get("/practices/author/:author", requireToken, (req, res, next) => {
+//     Practice.find({ author: {$eq: req.params.author} })
+//         .then(handle404) 
+//         .then(practices => {
+//             return practices.map(practice => practice)
+//         })
+//         .then(practices => {
+//             const responsePractices = scrubPracticeForUser(practices)
+//             res.status(200).json({ practices: responsePractices })
+//         })
+//         .catch(next)
+// })
+//For getting the list of favorite practices
+//Index by favoritedPractices
+//Get /practices/favorited/:userId
+// router.get("/practices/favorited/:userId", requireToken, (req, res, next) => {
+//     Student.findById(req.params.userId)
+//         .populate("favoritedPractices")
+//         .then(handle404)
+//         .then(student => {
+//             return student.favoritedPractices
+//         })
+//         .then(practices => {
+//             return practices.map(practice => practice)
+//         })
+//         .then(practices => {
+//             const responsePractices = scrubPracticeForUser(practices)
+//             res.status(200).json({ practices: responsePractices })
+//         })
+//         .catch(next)
+// })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router

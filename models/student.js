@@ -24,7 +24,12 @@ const studentSchema = new mongoose.Schema(
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "Posture",
 				required: true
-		}],    
+		}], 
+		// favoritedPractices: [{
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: "Practice",
+        //     required: true
+        // }],   
 	},
 	{
 		timestamps: true,

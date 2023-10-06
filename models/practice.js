@@ -24,6 +24,22 @@ const practiceSchema = new Schema({
     style: {
         type: String,
     },
+    // style: {    
+        // enum: [
+        //     "vinyasa",
+        //     "restorative",
+        //     "astanga",
+        // ]
+    // }
+
+    // template: {
+        //     lengthOfPractice: {
+        //         type: String
+        //     },
+        //     style: {
+        //         type: String
+        //     },
+        // }
     sequence: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Posture",

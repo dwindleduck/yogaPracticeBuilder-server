@@ -62,4 +62,40 @@ router.patch("/student/updateKnown", requireToken, (req, res, next) => {
 })
 
 
+//Not using this yet
+//UPDATE
+//PATCH /students/:id
+// router.patch("/students/:id", requireToken, (req, res, next) => {
+//     Student.findById(req.params.id)
+//         .then(handle404)
+//         .then(student => {
+//             return student.updateOne(req.body.student)
+//         })
+//         .then(() => res.sendStatus(204)) //success, no content returned
+//         .catch(next)
+// })
+
+
+
+//for favoriting a practice
+//UPDATE
+// Patch /student/updateFavorited
+// router.patch("/student/updateFavorited", requireToken, (req, res, next) => {
+//     Student.findById(req.user._id)
+//         .then(handle404)
+//         .then(student => {
+//             student.favoritedPractices.push(req.body)
+//             return student.save()
+//         })
+//         .then(() => res.sendStatus(204)) //success, no content returned
+//         .catch(next)
+// })
+
+
+
+
+
+
+
+
 module.exports = router
