@@ -1,7 +1,7 @@
 const express = require("express")
 const { handle404 } = require("../../lib/custom-errors")
-const { requireToken } = require("../../config/auth")
-const { ensureIsAdmin } = require("../../lib/ensureIsAdmin")
+const { requireToken, requireAdmin } = require("../../config/auth")
+// const { ensureIsAdmin } = require("../../lib/ensureIsAdmin")
 const Posture = require("../../models/posture")
 const Student = require("../../models/student")
 const router = express.Router()
@@ -26,40 +26,18 @@ const scrubPostureForUser = (postures) => {
 
 // POST /postures *admin
 
+
+
+// TODO: add pagination to this call
 // GET /postures
-    // /postures?portionOfPractice=standing&tags=hamstrings
-
-// GET /postures/:id *user
-
-// PATCH /postures/:id *admin
-
-// DELETE /postures/:id *admin
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// *********************************************************************************
-// *********************************************************************************
-// **********************Incorporate then delete everything below here**************
-// *********************************************************************************
-// *********************************************************************************
-// *********************************************************************************
-
-
-
-//Index
-//GET /postures
+// /postures?portionOfPractice=standing&tags=hamstrings
 router.get("/v2/postures", (req, res, next) => {
+    // TODO: add arguments to this find() call like:
+    // Posture.find({ 
+        // portionOfPractice: {$eq: <standing>},
+        // tags: 
+        // etc....
+    //   })
     Posture.find()
         .then(postures => {
             return postures.map(posture => posture)
@@ -71,8 +49,8 @@ router.get("/v2/postures", (req, res, next) => {
         .catch(next)
 })
 
-//Show Posture by Id
-//Get /postures/:id
+
+// GET /postures/:id *user
 router.get("/v2/postures/:id", requireToken, (req, res, next) => {
     Posture.findById(req.params.id)
     .then(handle404)    
@@ -82,10 +60,8 @@ router.get("/v2/postures/:id", requireToken, (req, res, next) => {
     .catch(next)
 })
 
-//Get student's known postures
-//GET /known
-router.get("/v2/known", requireToken, (req, res, next) => {
-    console.log(req.user._id)
+// GET /postures/known *user
+router.get("/v2/postures/known", requireToken, (req, res, next) => {
     Student.findById(req.user._id)
         .populate("knownPostures")
         .then(handle404)
@@ -102,36 +78,8 @@ router.get("/v2/known", requireToken, (req, res, next) => {
         .catch(next)
 })
 
-
-//For sorting postures
-//Index by portionOfPractice
-//GET /postures/portion/:portionOfPractice
-// router.get("/postures/portion/:portionOfPractice", requireToken, (req, res, next) => {
-//     Posture.find({ portionOfPractice: {$eq: req.params.portionOfPractice} })
-//     .then(handle404)    
-//     .then(postures => {
-//             return postures.map(posture => posture)
-//         })
-//         .then(postures => {
-//             const responsePostures = scrubPostureForUser(postures)
-//             res.status(200).json({ postures: responsePostures })
-//         })
-//         .catch(next)
-// })
-
-
-
-
-
-
-
-
-
-
-
-// PATCH /postures/:id
-// ensureIsAdmin
-// requireToken,
+// TODO: change to requireAdmin
+// PATCH /postures/:id *admin
 router.patch("/v2/postures/:id", requireToken, (req, res, next) => {
     Posture.findById(req.params.id)
         .then(handle404)
@@ -142,11 +90,19 @@ router.patch("/v2/postures/:id", requireToken, (req, res, next) => {
         .catch(next)
 })
 
+// PATCH /postures/known *user
+router.patch("/v2/postures/known", requireToken, (req, res, next) => {
+    Student.findById(req.user._id)
+        .then(handle404)
+        .then(student => {
+            student.knownPostures.push(req.body)
+            return student.save()
+        })
+        .then(() => res.sendStatus(204)) //success, no content returned
+        .catch(next)
+})
 
-
-
-// DELETE
-
+// DELETE /postures/:id *admin
 
 
 
