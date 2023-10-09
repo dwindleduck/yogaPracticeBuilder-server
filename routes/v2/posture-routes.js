@@ -1,7 +1,6 @@
 const express = require("express")
 const { handle404 } = require("../../lib/custom-errors")
 const { requireToken, requireAdmin } = require("../../config/auth")
-// const { ensureIsAdmin } = require("../../lib/ensureIsAdmin")
 const Posture = require("../../models/posture")
 const Student = require("../../models/student")
 const router = express.Router()
@@ -23,13 +22,14 @@ const scrubPostureForUser = (postures) => {
 }
 
 
-
+// Create a new posture
 // POST /postures *admin
+// TODO: check for unique posture (by name?)
 
 
-
-// TODO: add pagination to this call
+// Get all postures, filtered by any arguments
 // GET /postures
+// TODO: add pagination to this call
 // /postures?portionOfPractice=standing&tags=hamstrings
 router.get("/v2/postures", (req, res, next) => {
     // TODO: add arguments to this find() call like:
@@ -49,7 +49,7 @@ router.get("/v2/postures", (req, res, next) => {
         .catch(next)
 })
 
-
+// Get one posture with all details
 // GET /postures/:id *user
 router.get("/v2/postures/:id", requireToken, (req, res, next) => {
     Posture.findById(req.params.id)
@@ -60,6 +60,7 @@ router.get("/v2/postures/:id", requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// Get a list of the user's known postures
 // GET /postures/known *user
 router.get("/v2/postures/known", requireToken, (req, res, next) => {
     Student.findById(req.user._id)
@@ -78,8 +79,9 @@ router.get("/v2/postures/known", requireToken, (req, res, next) => {
         .catch(next)
 })
 
-// TODO: change to requireAdmin
+// Update one posture
 // PATCH /postures/:id *admin
+// TODO: change to requireAdmin
 router.patch("/v2/postures/:id", requireToken, (req, res, next) => {
     Posture.findById(req.params.id)
         .then(handle404)
@@ -90,6 +92,7 @@ router.patch("/v2/postures/:id", requireToken, (req, res, next) => {
         .catch(next)
 })
 
+// Update user's list of known postures
 // PATCH /postures/known *user
 router.patch("/v2/postures/known", requireToken, (req, res, next) => {
     Student.findById(req.user._id)
@@ -102,6 +105,7 @@ router.patch("/v2/postures/known", requireToken, (req, res, next) => {
         .catch(next)
 })
 
+// Delete one posture
 // DELETE /postures/:id *admin
 
 

@@ -21,7 +21,7 @@ const scrubPracticeForUser = (practices) => {
 }
 
 
-
+// Create a new practice
 // POST /practices  *user
 router.post("/v2/practices", requireToken, (req, res, next) => {
 
@@ -36,6 +36,7 @@ router.post("/v2/practices", requireToken, (req, res, next) => {
         .catch(next)
 })
 
+// Get all practices, filtered by any arguments
 // GET /practices
 // /practices?style=vinyasa&length=75
 router.get("/v2/practices", (req, res, next) => {
@@ -52,6 +53,7 @@ router.get("/v2/practices", (req, res, next) => {
         .catch(next)
 })
 
+// Get one practice
 // GET /practices/:id  *user
 router.get("/v2/practices/:id", requireToken, (req, res, next) => {
     Practice.findById(req.params.id)
@@ -63,8 +65,9 @@ router.get("/v2/practices/:id", requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// TODO: add pagination to this call
+// Get all practices built by the user
 // GET /practices/author (built practices) *author
+// TODO: add pagination to this call
 router.get("/v2/practices/author", requireToken, (req, res, next) => {
     Practice.find({ author: {$eq: req.user._id} })
     .then(handle404)
@@ -78,6 +81,7 @@ router.get("/v2/practices/author", requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// Get the user's list of favorite practices
 // GET /practices/favorites *user
 router.get("/v2/practices/favorites", requireToken, (req, res, next) => {
     Student.findById(req.user._id)
@@ -97,6 +101,7 @@ router.get("/v2/practices/favorites", requireToken, (req, res, next) => {
 })
 
 
+// Update one practice
 // PATCH /practices/:id *author or admin
 router.patch("/v2/practices/:id", requireToken, (req, res, next) => {
     Practice.findById(req.params.id)
@@ -114,6 +119,7 @@ router.patch("/v2/practices/:id", requireToken, (req, res, next) => {
          .catch(next)
  })
 
+//  Update the user's list of favorite practices
  // PATCH /practices/favorites *user
 router.patch("/practices/favorites", requireToken, (req, res, next) => {
     Student.findById(req.user._id)
@@ -126,6 +132,7 @@ router.patch("/practices/favorites", requireToken, (req, res, next) => {
         .catch(next)
 })
  
+// Delete one practice
 // DELETE /practices/:id *author or admin
 router.delete("/v2/practices/:id", requireToken, (req, res, next) => {
 	Practice.findById(req.params.id)

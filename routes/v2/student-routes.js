@@ -49,6 +49,7 @@ router.get("/v2/student", requireToken, (req, res, next) => {
         .catch(next)
 })
 
+// Update the user's information
 // PATCH /student (for name, email, password) *user or admin
 router.patch("/v2/student", requireToken, (req, res, next) => {
     Student.findById(req.user._id)
@@ -61,7 +62,7 @@ router.patch("/v2/student", requireToken, (req, res, next) => {
 })
 
 
-
+// Delete the user
 // DELETE /student/:id  *user or admin
 
 
