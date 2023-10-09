@@ -1,8 +1,9 @@
 const express = require("express")
-const { handle404 } = require("../lib/custom-errors")
-const { requireToken } = require("../config/auth")
-const Posture = require("../models/posture")
-const Student = require("../models/student")
+const { handle404 } = require("../../lib/custom-errors")
+const { requireToken } = require("../../config/auth")
+const { ensureIsAdmin } = require("../../lib/ensureIsAdmin")
+const Posture = require("../../models/posture")
+const Student = require("../../models/student")
 const router = express.Router()
 
 const scrubPostureForUser = (postures) => {
@@ -81,6 +82,38 @@ router.get("/known", requireToken, (req, res, next) => {
 //         })
 //         .catch(next)
 // })
+
+
+
+
+
+
+
+
+
+
+
+// PATCH /postures/:id
+// ensureIsAdmin
+// requireToken,
+router.patch("/postures/:id", requireToken, (req, res, next) => {
+    Posture.findById(req.params.id)
+        .then(handle404)
+        .then(posture => {
+            return posture.updateOne(req.body.posture)
+        })
+        .then(() => res.sendStatus(204)) //success, no content returned
+        .catch(next)
+})
+
+
+
+
+// DELETE
+
+
+
+
 
 
 module.exports = router

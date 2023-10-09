@@ -1,13 +1,55 @@
 const express = require("express")
-const { createStudentToken, requireToken } = require("../config/auth")
+const { createStudentToken, requireToken } = require("../../config/auth")
 const bcrypt = require("bcrypt")
-const { handle404 } = require("../lib/custom-errors")
-const Student = require("../models/student")
+const { handle404 } = require("../../lib/custom-errors")
+const Student = require("../../models/student")
 
 const router = express.Router()
 
+
+// POST /sign-up
+
+// POST /sign-in
+
+// GET /student *user or admin
+
+// GET /student/known-postures *user
+
+// GET /student/favorite-practices *user
+
+// PATCH /student (for name, email, password) *user or admin
+
+// PATCH /student/known-postures *user
+
+// PATCH /student/favorite-practices *user
+
+// DELETE /student/:id  *user or admin
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// *********************************************************************************
+// *********************************************************************************
+// **********************Incorporate then delete everything below here**************
+// *********************************************************************************
+// *********************************************************************************
+// *********************************************************************************
+
 //Post /sign-up
-router.post("/sign-up", (req, res, next) => {
+router.post("/v2/sign-up", (req, res, next) => {
     bcrypt
         .hash(req.body.credentials.password, 10)
         .then(hashedPassword => {
@@ -26,7 +68,7 @@ router.post("/sign-up", (req, res, next) => {
 })
 
 //Post /sign-in
-router.post("/sign-in", (req, res, next) => {
+router.post("/v2/sign-in", (req, res, next) => {
     Student.findOne({ email: req.body.credentials.email})
         .then(student => createStudentToken(req, student))
         .then(token => {
@@ -37,7 +79,7 @@ router.post("/sign-in", (req, res, next) => {
 
 //SHOW
 //Get /student
-router.get("/student", requireToken, (req, res, next) => {
+router.get("/v2/student", requireToken, (req, res, next) => {
     Student.findById(req.user._id)
         .then(handle404) 
         .then(student => {
@@ -50,7 +92,7 @@ router.get("/student", requireToken, (req, res, next) => {
 
 //UPDATE Known postures
 // Patch /student/updateKnown
-router.patch("/student/updateKnown", requireToken, (req, res, next) => {
+router.patch("/v2/student/updateKnown", requireToken, (req, res, next) => {
     Student.findById(req.user._id)
         .then(handle404)
         .then(student => {

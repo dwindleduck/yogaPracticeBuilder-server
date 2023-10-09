@@ -1,8 +1,8 @@
 const express = require("express")
-const { handle404 } = require("../lib/custom-errors")
-const { requireToken } = require("../config/auth")
-const Practice = require("../models/practice")
-const Student = require("../models/student")
+const { handle404 } = require("../../lib/custom-errors")
+const { requireToken } = require("../../config/auth")
+const Practice = require("../../models/practice")
+const Student = require("../../models/student")
 const router = express.Router()
 
 const scrubPracticeForUser = (practices) => {

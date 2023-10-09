@@ -37,6 +37,7 @@ const createStudentToken = (req, student) => {
 	return jwt.sign({ id: student._id }, secret, { expiresIn: 36000 })
 }
 
+
 module.exports = {
 	requireToken,
 	createStudentToken,
