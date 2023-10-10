@@ -1,6 +1,5 @@
 const express = require("express")
 const { createStudentToken, requireToken, requireAdmin } = require("../../config/auth")
-
 const bcrypt = require("bcrypt")
 const { handle404 } = require("../../lib/custom-errors")
 const Student = require("../../models/student")
@@ -61,9 +60,22 @@ router.patch("/v2/student", requireToken, (req, res, next) => {
         .catch(next)
 })
 
-
 // Delete the user
-// DELETE /student/:id  *user or admin
+// DELETE /student  *user
+router.delete("/v2/student", requireToken, (req, res, next) => {
+	//find the logged in user
+    Student.findById(req.user._id)
+        .then(handle404) 
+        .then((student) => {        
+            student.deleteOne()
+		})
+		.then(() => res.sendStatus(204)) //success, no content returned
+		.catch(next)
+})
+
+// Delete a user ***This is for admins***
+// DELETE /student/:id  *admin
+
 
 
 

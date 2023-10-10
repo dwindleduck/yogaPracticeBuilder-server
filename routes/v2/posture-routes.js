@@ -25,7 +25,13 @@ const scrubPostureForUser = (postures) => {
 // Create a new posture
 // POST /postures *admin
 // TODO: check for unique posture (by name?)
-
+router.post("/v2/postures", requireToken, (req, res, next) => {
+    Posture.create(req.body.posture)
+        .then(posture => {
+            res.status(201).json({ posture: posture }) //201: something was created on the server successfully
+        })
+        .catch(next)
+})
 
 // Get all postures, filtered by any arguments
 // GET /postures
@@ -49,17 +55,6 @@ router.get("/v2/postures", (req, res, next) => {
         .catch(next)
 })
 
-// Get one posture with all details
-// GET /postures/:id *user
-router.get("/v2/postures/:id", requireToken, (req, res, next) => {
-    Posture.findById(req.params.id)
-    .then(handle404)    
-    .then(posture => {
-            res.status(200).json({ posture: posture})
-        })
-    .catch(next)
-})
-
 // Get a list of the user's known postures
 // GET /postures/known *user
 router.get("/v2/postures/known", requireToken, (req, res, next) => {
@@ -79,6 +74,38 @@ router.get("/v2/postures/known", requireToken, (req, res, next) => {
         .catch(next)
 })
 
+// Get one posture with all details
+// GET /postures/:id *user
+router.get("/v2/postures/:id", requireToken, (req, res, next) => {
+    Posture.findById(req.params.id)
+    .then(handle404)    
+    .then(posture => {
+            res.status(200).json({ posture: posture})
+        })
+    .catch(next)
+})
+
+// Add or remove a posture from the list of known postures
+// PATCH /postures/known *user
+router.patch("/v2/postures/known", requireToken, (req, res, next) => {
+    Student.findById(req.user._id)
+        .then(handle404)
+        .then(student => {
+            // Check if the posture is already in the list
+            if(student.knownPostures.includes(req.body.posture)){
+                //remove from list
+                student.knownPostures.pop(req.body.posture)
+            }
+            else {
+                //add to list
+                student.knownPostures.push(req.body.posture)
+            }
+            return student.save()
+        })
+        .then(() => res.sendStatus(204)) //success, no content returned
+        .catch(next)
+})
+
 // Update one posture
 // PATCH /postures/:id *admin
 // TODO: change to requireAdmin
@@ -92,24 +119,17 @@ router.patch("/v2/postures/:id", requireToken, (req, res, next) => {
         .catch(next)
 })
 
-// Update user's list of known postures
-// PATCH /postures/known *user
-router.patch("/v2/postures/known", requireToken, (req, res, next) => {
-    Student.findById(req.user._id)
-        .then(handle404)
-        .then(student => {
-            student.knownPostures.push(req.body)
-            return student.save()
-        })
-        .then(() => res.sendStatus(204)) //success, no content returned
-        .catch(next)
-})
-
 // Delete one posture
 // DELETE /postures/:id *admin
-
-
-
+router.delete("/v2/postures/:id", requireToken, (req, res, next) => {
+	Posture.findById(req.params.id)
+        .then(handle404) 
+        .then((posture) => {
+            posture.deleteOne()
+		})
+		.then(() => res.sendStatus(204))
+		.catch(next)
+})
 
 
 module.exports = router

@@ -27,7 +27,7 @@ const postureSchema = new Schema({
             "back-bending",
             "inversions",
             "reclining",
-            "resting"
+            "resting",
         ]
     },
     instructions: {

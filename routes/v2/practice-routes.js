@@ -53,17 +53,6 @@ router.get("/v2/practices", (req, res, next) => {
         .catch(next)
 })
 
-// Get one practice
-// GET /practices/:id  *user
-router.get("/v2/practices/:id", requireToken, (req, res, next) => {
-    Practice.findById(req.params.id)
-    .populate(["author", "sequence"])
-    .then(handle404)
-    .then(practice => {
-            res.status(200).json({ practice: practice})
-        })
-    .catch(next)
-})
 
 // Get all practices built by the user
 // GET /practices/author (built practices) *author
@@ -100,6 +89,40 @@ router.get("/v2/practices/favorites", requireToken, (req, res, next) => {
         .catch(next)
 })
 
+// Get one practice
+// GET /practices/:id  *user
+router.get("/v2/practices/:id", requireToken, (req, res, next) => {
+    Practice.findById(req.params.id)
+    .populate(["author", "sequence"])
+    .then(handle404)
+    .then(practice => {
+            res.status(200).json({ practice: practice})
+        })
+    .catch(next)
+})
+
+// Update the user's list of favorite practices
+// PATCH /practices/favorites *user
+router.patch("/v2/practices/favorites", requireToken, (req, res, next) => {
+    Student.findById(req.user._id)
+        .then(handle404)
+        .then(student => {
+            console.log(student.favoritedPractices)
+
+
+            if(student.favoritedPractices.includes(req.body.practice)){
+                // remove from list
+                student.favoritedPractices.pop(req.body.practice)
+            }
+            else{
+                // add to list
+                student.favoritedPractices.push(req.body.practice)
+            }
+            return student.save()
+        })
+        .then(() => res.sendStatus(204)) //success, no content returned
+        .catch(next)
+})
 
 // Update one practice
 // PATCH /practices/:id *author or admin
@@ -107,30 +130,14 @@ router.patch("/v2/practices/:id", requireToken, (req, res, next) => {
     Practice.findById(req.params.id)
          .then(handle404) 
          .then(practice => {
+            //if the user is the author, update the practice
              if(practice.author.equals(req.user._id)) {
-                 console.log("Updated!")
                  return practice.updateOne(req.body.practice)
-             }
-             else {
-                 console.log("That's not your practice to edit!")
              }
          })
          .then(() => res.sendStatus(204)) //success, no content returned
          .catch(next)
  })
-
-//  Update the user's list of favorite practices
- // PATCH /practices/favorites *user
-router.patch("/practices/favorites", requireToken, (req, res, next) => {
-    Student.findById(req.user._id)
-        .then(handle404)
-        .then(student => {
-            student.favoritedPractices.push(req.body)
-            return student.save()
-        })
-        .then(() => res.sendStatus(204)) //success, no content returned
-        .catch(next)
-})
  
 // Delete one practice
 // DELETE /practices/:id *author or admin
@@ -138,19 +145,14 @@ router.delete("/v2/practices/:id", requireToken, (req, res, next) => {
 	Practice.findById(req.params.id)
         .then(handle404) 
         .then((practice) => {
+            // if the user is the author, delete the practice
             if(practice.author.equals(req.user._id)) {
-                console.log("Deleted!")
                 practice.deleteOne()
-            }
-            else {
-                console.log("That's not your practice to delete!")
             }
 		})
 		.then(() => res.sendStatus(204))
 		.catch(next)
 })
-
-
 
 
 module.exports = router

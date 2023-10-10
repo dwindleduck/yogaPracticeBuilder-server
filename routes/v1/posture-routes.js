@@ -1,7 +1,6 @@
 const express = require("express")
 const { handle404 } = require("../../lib/custom-errors")
 const { requireToken } = require("../../config/auth")
-const { ensureIsAdmin } = require("../../lib/ensureIsAdmin")
 const Posture = require("../../models/posture")
 const Student = require("../../models/student")
 const router = express.Router()
