@@ -1,5 +1,6 @@
 const express = require("express")
-const { createStudentToken, requireToken, requireAdmin } = require("../../config/auth")
+const { createStudentToken, requireToken } = require("../../config/auth")
+const { requireAdmin } = require("../../lib/requireAdmin")
 const bcrypt = require("bcrypt")
 const { handle404 } = require("../../lib/custom-errors")
 const Student = require("../../models/student")

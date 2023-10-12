@@ -1,6 +1,7 @@
 const express = require("express")
 const { handle404 } = require("../../lib/custom-errors")
-const { requireToken, requireAdmin } = require("../../config/auth")
+const { requireToken } = require("../../config/auth")
+const { requireAdmin } = require("../../lib/requireAdmin")
 const Posture = require("../../models/posture")
 const Student = require("../../models/student")
 const router = express.Router()
@@ -25,12 +26,12 @@ const scrubPostureForUser = (postures) => {
 // Create a new posture
 // POST /postures *admin
 // TODO: check for unique posture (by name?)
-router.post("/v2/postures", requireToken, (req, res, next) => {
-    Posture.create(req.body.posture)
-        .then(posture => {
-            res.status(201).json({ posture: posture }) //201: something was created on the server successfully
-        })
-        .catch(next)
+router.post("/v2/postures", [requireToken, requireAdmin], (req, res, next) => {
+        Posture.create(req.body.posture)
+            .then(posture => {
+                res.status(201).json({ posture: posture }) //201: something was created on the server successfully
+            })
+            .catch(next)
 })
 
 // Get all postures, filtered by any arguments
@@ -108,8 +109,7 @@ router.patch("/v2/postures/known", requireToken, (req, res, next) => {
 
 // Update one posture
 // PATCH /postures/:id *admin
-// TODO: change to requireAdmin
-router.patch("/v2/postures/:id", requireToken, (req, res, next) => {
+router.patch("/v2/postures/:id", [requireToken, requireAdmin], (req, res, next) => {
     Posture.findById(req.params.id)
         .then(handle404)
         .then(posture => {
@@ -121,7 +121,7 @@ router.patch("/v2/postures/:id", requireToken, (req, res, next) => {
 
 // Delete one posture
 // DELETE /postures/:id *admin
-router.delete("/v2/postures/:id", requireToken, (req, res, next) => {
+router.delete("/v2/postures/:id", [requireToken, requireAdmin], (req, res, next) => {
 	Posture.findById(req.params.id)
         .then(handle404) 
         .then((posture) => {

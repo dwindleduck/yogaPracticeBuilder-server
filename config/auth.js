@@ -25,17 +25,6 @@ passport.initialize()
 //ensures the user is logged in (has a token)
 const requireToken = passport.authenticate("jwt", { session: false })
 
-//ensures the user is logged in and is an ADMIN level user
-const requireAdmin = (req, res, next) => {
-  
-	//not working yet, req.user undefined
-	if (!requireToken || !req.user.permissionLevel==="admin") {
-		return res.status(401).json(`Unauthorized - permission level -- ${req}`);
-	}
-	  next();
-	}; 
-
-
 const createStudentToken = (req, student) => {
 	if (
 		!student ||
@@ -52,6 +41,5 @@ const createStudentToken = (req, student) => {
 
 module.exports = {
 	requireToken,
-	requireAdmin,
 	createStudentToken,
 }
