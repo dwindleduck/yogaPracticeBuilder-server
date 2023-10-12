@@ -1,5 +1,7 @@
 // requiring the connected mongoose
 const mongoose = require("mongoose")
+const mongoosePaginate = require('mongoose-paginate');
+
 
 // getting the Schema
 const Schema = mongoose.Schema
@@ -48,6 +50,8 @@ const practiceSchema = new Schema({
 }, {
     timestamps: true 
 })
+
+practiceSchema.plugin(mongoosePaginate);
 
 const Practice = mongoose.model("Practice", practiceSchema)
 

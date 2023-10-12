@@ -4,8 +4,10 @@ const { requireToken } = require("../../config/auth")
 const Practice = require("../../models/practice")
 const Student = require("../../models/student")
 const router = express.Router()
+// const mongoosePaginate = require('mongoose-paginate');
 
-const scrubPracticeForUser = (practices) => {
+
+const scrubPracticesForUser = (practices) => {
     const responsePractices = []
     practices.forEach(practice => {
         const updatedPractice = {
@@ -36,58 +38,158 @@ router.post("/v2/practices", requireToken, (req, res, next) => {
         .catch(next)
 })
 
+
+// ********************************************************
+// ********************************************************
+// ********************************************************
+// ********************************************************
+
+// Without pagination
 // Get all practices, filtered by any arguments
 // GET /practices
 // /practices?style=vinyasa&length=75
-router.get("/v2/practices", (req, res, next) => {
-    // TODO: update this find() with { style: {$eq: <vinyasa>} etc... }
-    Practice.find()
-        .populate("sequence")
-        .then(practices => {
-            return practices.map(practice => practice)
-        })
-        .then(practices => {
-            const responsePractices = scrubPracticeForUser(practices)
-            res.status(200).json({ practices: responsePractices })
-        })
-        .catch(next)
-})
-
-
-// Get all practices built by the user
-// GET /practices/author (built practices) *author
 // TODO: add pagination to this call
-router.get("/v2/practices/author", requireToken, (req, res, next) => {
-    Practice.find({ author: {$eq: req.user._id} })
-    .then(handle404)
-    .then(practices => {
-        return practices.map(practice => practice)
-    })
-    .then(practices => {
-        const responsePractices = scrubPracticeForUser(practices)
-        res.status(200).json({ practices: responsePractices })
+// router.get("/v2/practices", (req, res, next) => {
+//     // TODO: update this find() with { style: {$eq: <vinyasa>} etc... }
+//     Practice.find()
+//         .populate("sequence")
+//         .then(practices => {
+//             return practices.map(practice => practice)
+//         })
+//         .then(practices => {
+//             const responsePractices = scrubPracticeForUser(practices)
+//             res.status(200).json({ practices: responsePractices })
+//         })
+//         .catch(next)
+// })
+
+
+
+// GET /practices -- With Pagination
+// Get all practices, filtered by any arguments
+// /practices?style=vinyasa&length=75
+router.get("/v2/practices", (req, res, next) => {
+    const pageNumber = req.query.page || 1; // Get the current page number from the query parameters
+    const pageSize = 10; // Number of items per page
+
+    // TODO: update the {} with style: {$eq: <vinyasa>} etc...
+    Practice.paginate({}, { page: pageNumber, limit: pageSize }, (err, result) => {
+        if (err) return res.status(500).json({ message: 'Error occurred while fetching practices.' });
+
+        const { docs, total, limit, page, pages } = result;
+        const responsePractices = scrubPracticesForUser(docs)
+        res.json({ practices: responsePractices, total, limit, page, pages });
     })
     .catch(next)
 })
 
+// ********************************************************
+// ********************************************************
+// ********************************************************
+// ********************************************************
+
+
+// Without pagination
+// Get all practices built by the user
+// GET /practices/author (built practices) *author
+// TODO: add pagination to this call
+// router.get("/v2/practices/author", requireToken, (req, res, next) => {
+//     Practice.find({ author: {$eq: req.user._id} })
+//     .then(handle404)
+//     .then(practices => {
+//         return practices.map(practice => practice)
+//     })
+//     .then(practices => {
+//         const responsePractices = scrubPracticesForUser(practices)
+//         res.status(200).json({ practices: responsePractices })
+//     })
+//     .catch(next)
+// })
+
+
+
+// GET /practices/author (built practices) *author -- With Pagination
+// Get all practices built by the user
+// /practices?style=vinyasa&length=75
+router.get("/v2/practices/author", requireToken, (req, res, next) => {
+    const pageNumber = req.query.page || 1; // Get the current page number from the query parameters
+    const pageSize = 10; // Number of items per page
+
+    // TODO: update the {} with style: {$eq: <vinyasa>} etc...
+    Practice.paginate({ author: {$eq: req.user._id} }, { page: pageNumber, limit: pageSize }, (err, result) => {
+        if (err) return res.status(500).json({ message: 'Error occurred while fetching practices.' });
+
+        const { docs, total, limit, page, pages } = result;
+        const responsePractices = scrubPracticesForUser(docs)
+        res.json({ practices: responsePractices, total, limit, page, pages })
+    })
+    .catch(next)
+})
+
+// ********************************************************
+// ********************************************************
+// ********************************************************
+// ********************************************************
+
+
+// Without pagination
+// Get the user's list of favorite practices
+// GET /practices/favorites *user
+// TODO: add pagination to this call
+// router.get("/v2/practices/favorites", requireToken, (req, res, next) => {
+//     Student.findById(req.user._id)
+//         .populate("favoritedPractices")
+//         .then(handle404)
+//         .then(student => {
+//             return student.favoritedPractices
+//         })
+//         .then(practices => {
+//             return practices.map(practice => practice)
+//         })
+//         .then(practices => {
+//             const responsePractices = scrubPracticesForUser(practices)
+//             res.status(200).json({ practices: responsePractices })
+//         })
+//         .catch(next)
+// })
+
+
+// With pagination
 // Get the user's list of favorite practices
 // GET /practices/favorites *user
 router.get("/v2/practices/favorites", requireToken, (req, res, next) => {
     Student.findById(req.user._id)
-        .populate("favoritedPractices")
         .then(handle404)
         .then(student => {
             return student.favoritedPractices
         })
         .then(practices => {
-            return practices.map(practice => practice)
-        })
-        .then(practices => {
-            const responsePractices = scrubPracticeForUser(practices)
-            res.status(200).json({ practices: responsePractices })
+            const pageNumber = req.query.page || 1; // Get the current page number from the query parameters
+            const pageSize = 10; // Number of items per page
+
+            Practice.paginate({ _id: {$in: practices} }, { page: pageNumber, limit: pageSize }, (err, result) => {
+                if (err) return res.status(500).json({ message: 'Error occurred while fetching practices.' });
+
+                const { docs, total, limit, page, pages } = result;
+                const responsePractices = scrubPracticesForUser(docs)
+                res.json({ practices: responsePractices, total, limit, page, pages });
+            })
+            .catch(next)
         })
         .catch(next)
 })
+
+
+// ********************************************************
+// ********************************************************
+// ********************************************************
+// ********************************************************
+
+
+
+
+
+
 
 // Get one practice
 // GET /practices/:id  *user
