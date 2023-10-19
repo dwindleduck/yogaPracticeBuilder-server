@@ -28,7 +28,7 @@ const scrubPracticesForUser = (practices) => {
 router.post("/v2/practices", requireToken, (req, res, next) => {
 
     const practiceHolder = req.body.practice
-    //give theh practice an author and assign it the user id
+    //give the practice an author and assign it the user id
     practiceHolder.author = req.user._id
     
     Practice.create(practiceHolder)
