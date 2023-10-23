@@ -31,9 +31,14 @@ router.post("/v2/sign-up", (req, res, next) => {
 // POST /sign-in
 router.post("/v2/sign-in", (req, res, next) => {
     Student.findOne({ email: req.body.credentials.email})
-        .then(student => createStudentToken(req, student))
-        .then(token => {
-            res.json({ token: token })
+        .then(student => {
+            return {
+                token: createStudentToken(req, student),
+                student: student
+            }
+        })
+        .then(userData => {
+            res.json(userData)
         })
         .catch(next)
 })
