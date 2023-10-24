@@ -31,7 +31,10 @@ router.post("/v2/sign-up", (req, res, next) => {
 // POST /sign-in
 router.post("/v2/sign-in", (req, res, next) => {
     Student.findOne({ email: req.body.credentials.email})
+        .populate("knownPostures")
+        .then(handle404) 
         .then(student => {
+            // TODO: Populate knownPostures
             return {
                 token: createStudentToken(req, student),
                 student: student

@@ -118,28 +118,28 @@ router.get("/v2/postures", (req, res, next) => {
 // With pagination
 // Get a list of the user's known postures
 // GET /postures/known *user
-router.get("/v2/postures/known", requireToken, (req, res, next) => {
-    Student.findById(req.user._id)
-    .then(handle404)
-    .then(student => {
-        return student.knownPostures
-    })
-    .then(postures => {
-        const pageNumber = req.query.page || 1; // Get the current page number from the query parameters
-        const pageSize = 10; // Number of items per page
+// router.get("/v2/postures/known", requireToken, (req, res, next) => {
+//     Student.findById(req.user._id)
+//     .then(handle404)
+//     .then(student => {
+//         return student.knownPostures
+//     })
+//     .then(postures => {
+//         const pageNumber = req.query.page || 1; // Get the current page number from the query parameters
+//         const pageSize = 10; // Number of items per page
 
-        // TODO: update the {} with style: {$eq: <vinyasa>} etc...
-        Posture.paginate({ _id: {$in: postures}}, { page: pageNumber, limit: pageSize }, (err, result) => {
-            if (err) return res.status(500).json({ message: 'Error occurred while fetching postures.' });
+//         // TODO: update the {} with style: {$eq: <vinyasa>} etc...
+//         Posture.paginate({ _id: {$in: postures}}, { page: pageNumber, limit: pageSize }, (err, result) => {
+//             if (err) return res.status(500).json({ message: 'Error occurred while fetching postures.' });
 
-            const { docs, total, limit, page, pages } = result;
-            const responsePostures = scrubPosturesForUser(docs)
-            res.json({ postures: responsePostures, total, limit, page, pages });
-        })
-        .catch(next)
-    })
-    .catch(next)
-})
+//             const { docs, total, limit, page, pages } = result;
+//             const responsePostures = scrubPosturesForUser(docs)
+//             res.json({ postures: responsePostures, total, limit, page, pages });
+//         })
+//         .catch(next)
+//     })
+//     .catch(next)
+// })
 
 // ********************************************************
 // ********************************************************
