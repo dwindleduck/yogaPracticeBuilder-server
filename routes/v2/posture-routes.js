@@ -157,16 +157,15 @@ router.get("/v2/postures/:id", requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// Add or remove a posture from the list of known postures
-// PATCH /postures/known *user
-router.patch("/v2/postures/known", requireToken, (req, res, next) => {
+// Add a posture to the list of known postures
+// PATCH /postures/add-known *user
+router.patch("/v2/postures/add-known", requireToken, (req, res, next) => {
     Student.findById(req.user._id)
         .then(handle404)
         .then(student => {
             // Check if the posture is already in the list
             if(student.knownPostures.includes(req.body.posture)){
-                //remove from list
-                student.knownPostures.pop(req.body.posture)
+                console.log("already known")
             }
             else {
                 //add to list
@@ -177,6 +176,28 @@ router.patch("/v2/postures/known", requireToken, (req, res, next) => {
         .then(() => res.sendStatus(204)) //success, no content returned
         .catch(next)
 })
+
+// Remove a posture from the list of known postures
+// PATCH /postures/remove-known *user
+router.patch("/v2/postures/remove-known", requireToken, (req, res, next) => {
+    Student.findById(req.user._id)
+        .then(handle404)
+        .then(student => {
+            // Check if the posture is already in the list
+            if(student.knownPostures.includes(req.body.posture)){
+                //remove from list
+                student.knownPostures.pop(req.body.posture)
+            }
+            else {
+               console.log("this posture is not known, cannot be removed")
+            }
+            return student.save()
+        })
+        .then(() => res.sendStatus(204)) //success, no content returned
+        .catch(next)
+})
+
+
 
 // Update one posture
 // PATCH /postures/:id *admin
