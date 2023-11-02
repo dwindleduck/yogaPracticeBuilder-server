@@ -167,8 +167,7 @@ router.patch("/v2/postures/add-known", requireToken, (req, res, next) => {
             if(student.knownPostures.includes(req.body.posture)){
                 console.log("already known")
             }
-            else {
-                //add to list
+            else {//add to list
                 student.knownPostures.push(req.body.posture)
             }
             return student.save()
