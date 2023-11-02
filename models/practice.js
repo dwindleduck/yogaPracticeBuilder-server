@@ -1,5 +1,7 @@
 // requiring the connected mongoose
 const mongoose = require("mongoose")
+const mongoosePaginate = require('mongoose-paginate');
+
 
 // getting the Schema
 const Schema = mongoose.Schema
@@ -24,6 +26,22 @@ const practiceSchema = new Schema({
     style: {
         type: String,
     },
+    // style: {    
+        // enum: [
+        //     "vinyasa",
+        //     "restorative",
+        //     "astanga",
+        // ]
+    // }
+
+    // template: {
+        //     lengthOfPractice: {
+        //         type: String
+        //     },
+        //     style: {
+        //         type: String
+        //     },
+        // }
     sequence: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Posture",
@@ -32,6 +50,8 @@ const practiceSchema = new Schema({
 }, {
     timestamps: true 
 })
+
+practiceSchema.plugin(mongoosePaginate);
 
 const Practice = mongoose.model("Practice", practiceSchema)
 

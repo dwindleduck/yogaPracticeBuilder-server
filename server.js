@@ -8,9 +8,12 @@ const db = require("./config/db")
 const PORT = process.env.PORT || 8000
 
 const seed = require("./lib/seed")
-const studentRoutes = require("./routes/student-routes")
-const postureRoutes = require("./routes/posture-routes")
-const practiceRoutes = require("./routes/practice-routes")
+const v1_studentRoutes = require("./routes/v1/student-routes")
+const v1_postureRoutes = require("./routes/v1/posture-routes")
+const v1_practiceRoutes = require("./routes/v1/practice-routes")
+const v2_studentRoutes = require("./routes/v2/student-routes")
+const v2_postureRoutes = require("./routes/v2/posture-routes")
+const v2_practiceRoutes = require("./routes/v2/practice-routes")
 
 // deprecation warning
 mongoose.set("strictQuery", true)
@@ -33,9 +36,12 @@ app.use(cors({ origin: process.env.CLIENT_ORIGIN || `http://127.0.0.1:5500` }))
 app.use(requestLogger)
 
 app.use("/seed", seed)
-app.use(studentRoutes)
-app.use(postureRoutes)
-app.use(practiceRoutes)
+app.use(v1_studentRoutes)
+app.use(v1_postureRoutes)
+app.use(v1_practiceRoutes)
+app.use(v2_studentRoutes)
+app.use(v2_postureRoutes)
+app.use(v2_practiceRoutes)
 
 app.listen(PORT, () => {
     console.log("listening on port " + PORT)

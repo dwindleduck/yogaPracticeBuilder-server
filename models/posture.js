@@ -1,5 +1,6 @@
 // requiring the connected mongoose
 const mongoose = require("mongoose")
+const mongoosePaginate = require('mongoose-paginate');
 
 // getting the Schema
 const Schema = mongoose.Schema
@@ -27,7 +28,7 @@ const postureSchema = new Schema({
             "back-bending",
             "inversions",
             "reclining",
-            "resting"
+            "resting",
         ]
     },
     instructions: {
@@ -58,6 +59,8 @@ const postureSchema = new Schema({
 }, {
     timestamps: true 
 })
+
+postureSchema.plugin(mongoosePaginate);
 
 const Posture = mongoose.model("Posture", postureSchema)
 

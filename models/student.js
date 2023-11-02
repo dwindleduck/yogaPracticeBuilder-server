@@ -14,9 +14,11 @@ const studentSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		
 		//not required
 		token: String,
-        name: {
+        
+		name: {
 			type: String,
 			required: true,
 		},
@@ -24,7 +26,22 @@ const studentSchema = new mongoose.Schema(
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "Posture",
 				required: true
-		}],    
+		}], 
+		favoritedPractices: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Practice",
+            required: true
+        }],   
+
+		permissionLevel: {
+			type: String,
+			enum: [
+				"student",
+				"admin",
+			],
+			default: "student",
+			required: true,
+		},
 	},
 	{
 		timestamps: true,

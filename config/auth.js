@@ -22,6 +22,7 @@ const strategy = new Strategy(opts, function (jwt_payload, done) {
 passport.use(strategy)
 passport.initialize()
 
+//ensures the user is logged in (has a token)
 const requireToken = passport.authenticate("jwt", { session: false })
 
 const createStudentToken = (req, student) => {
@@ -36,6 +37,7 @@ const createStudentToken = (req, student) => {
 	}
 	return jwt.sign({ id: student._id }, secret, { expiresIn: 36000 })
 }
+
 
 module.exports = {
 	requireToken,
