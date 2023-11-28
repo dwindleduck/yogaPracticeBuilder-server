@@ -1,5 +1,6 @@
 // requiring the connected mongoose
 const mongoose = require("mongoose")
+// use this to paginate response data
 const mongoosePaginate = require('mongoose-paginate');
 
 // getting the Schema
