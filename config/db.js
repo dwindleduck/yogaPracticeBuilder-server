@@ -1,4 +1,3 @@
-
 const mongooseBaseName = "yoga-practice-builder"
 
 const database = {
@@ -9,7 +8,6 @@ const database = {
 const localDb = process.env.TESTENV ? database.test : database.development
 
 const currentDb = process.env.DATABASE_URL || localDb
-
 
 
 //exporting a string db name

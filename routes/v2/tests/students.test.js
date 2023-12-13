@@ -15,7 +15,7 @@ describe('Sanity test', () => {
       })
       expect(res.status).toBe(200)
       // expect(res.body.credentials).toBeTruthy()
-    });
+    })
 
     // test('The login route with the wrong user', async () => {
     //   try {
