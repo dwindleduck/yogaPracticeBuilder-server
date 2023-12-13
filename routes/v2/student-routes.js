@@ -84,12 +84,11 @@ router.delete("/v2/student", requireToken, (req, res, next) => {
 
 // Delete a user ***This is for admins***
 // DELETE /student/:id  *admin
-
-
-
-
-
-
-
+// 
+// 
+// 
+// 
+// 
+// 
 
 module.exports = router

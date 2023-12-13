@@ -2,7 +2,6 @@
 const mongoose = require("mongoose")
 const mongoosePaginate = require('mongoose-paginate');
 
-
 // getting the Schema
 const Schema = mongoose.Schema
 
