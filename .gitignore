@@ -1,6 +1,13 @@
 node_modules
 
-.env
+
+coverage
 
 /coverage
+
 /routes/v2/tests
+routes/v2/tests
+
+
+
+.env
